@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6e8efb, #a777e3); /* Match the login page background */
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Animated Background Shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            animation: move 10s linear infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(30px, -30px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1); /* Slightly transparent container */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+            margin-top: 20%;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #fff; /* White color for header text */
+        }
+
+        /* User Info */
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #e0e0e0; /* Slightly lighter color for user info */
+        }
+
+        /* Form Styles */
+        .form-container {
+            display: none; /* Initially hide the form */
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        /* Input Styles */
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        input[type="password"]:focus {
+            background-color: rgba(255, 255, 255, 0.5);
+            outline: none;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #ff4081;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 1rem;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #ff79b0;
+            transform: scale(1.05);
+        }
+
+        /* Link Styles */
+        a {
+            color: white; /* Change link color to white */
+            text-decoration: none;
+            display: block; /* Make the link take the full button area */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+        }
+        
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <script>
+        // Function to toggle the visibility of the change password form
+        function toggleForm() {
+            const formContainer = document.getElementById('changePasswordForm');
+            if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+                formContainer.style.display = 'block'; // Show the form
+            } else {
+                formContainer.style.display = 'none'; // Hide the form
+            }
+        }
+
+        // Function to create and scatter shapes
+        function createShapes() {
+            const shapesContainer = document.body;
+            for (let i = 0; i < 12; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+                shape.style.width = `${Math.random() * 100 + 50}px`; // Random width between 50px and 150px
+                shape.style.height = shape.style.width; // Keep it circular
+                shape.style.background = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`; // Random opacity
+                shape.style.top = `${Math.random() * 100}vh`; // Random vertical position
+                shape.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+                shape.style.animationDuration = `${Math.random() * 10 + 5}s`; // Random animation duration between 5s and 15s
+                shapesContainer.appendChild(shape);
+            }
+        }
+
+        // Call the function to create shapes when the page loads
+        window.onload = createShapes;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+
+        <p><strong>Username:</strong> {{ username }}</p>
+
+        <button onclick="toggleForm()">Change Password</button>
+
+        <div id="changePasswordForm" class="form-container">
+            <form action="{{ url_for('change_password') }}" method="POST">
+                <label for="current_password">Current Password:</label>
+                <input type="password" name="current_password" required><br>
+
+                <label for="new_password">New Password:</label>
+                <input type="password" name="new_password" required><br>
+
+                <input type="submit" value="Change Password">
+            </form>
+        </div>
+
+        <button><a href="{{ url_for('home') }}">Back to Home</a></button>
+        <button><a href="{{ url_for('logout') }}">Logout</a></button>
+    </div>
+</body>
+</html>

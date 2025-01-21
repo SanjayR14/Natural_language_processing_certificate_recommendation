@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Audio</title>
+    <style>
+        .audio-toggle-button {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="audio-toggle-button">
+        <button id="toggleAudioButton">Audio Off</button>
+    </div>
+
+    <script>
+        // Adjust the path below based on your file structure
+        const audio = new Audio("static/Audio/Manasilaayo.mp3"); // Path to your audio file
+        let isPlaying = false; // Initially set to false
+
+        document.getElementById('toggleAudioButton').addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('toggleAudioButton').innerText = 'Audio On';
+            } else {
+                audio.loop = true; // Set looping when starting audio
+                audio.play().catch((error) => {
+                    console.error('Error playing audio:', error);
+                });
+                document.getElementById('toggleAudioButton').innerText = 'Audio Off';
+            }
+            isPlaying = !isPlaying; // Toggle the state
+        });
+
+        // Cleanup function to pause audio and reset when the window is closed or navigated away
+        window.addEventListener('beforeunload', () => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    </script>
+</body>
+</html>

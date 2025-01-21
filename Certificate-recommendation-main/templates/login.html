@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #6e8efb;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #6e8efb;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5579fb;
+        }
+
+        p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        a {
+            color: #6e8efb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 15px;
+            color: #ff6b6b;
+        }
+
+        /* Floating background shapes */
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Customize shape size and positions */
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 5%;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-duration: 8s;
+        }
+
+        .shape:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            left: 50%;
+            animation-duration: 10s;
+        }
+
+        .shape:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-duration: 7s;
+        }
+
+        .shape:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 75%;
+            left: 30%;
+            animation-duration: 6s;
+        }
+
+        .shape:nth-child(6) {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            right: 10%;
+            animation-duration: 9s;
+        }
+
+        .shape:nth-child(7) {
+            width: 50px;
+            height: 50px;
+            top: 40%;
+            right: 20%;
+            animation-duration: 12s;
+        }
+
+        .shape:nth-child(8) {
+            width: 100px;
+            height: 100px;
+            bottom: 5%;
+            left: 80%;
+            animation-duration: 11s;
+        }
+
+        .shape:nth-child(9) {
+            width: 75px;
+            height: 75px;
+            top: 20%;
+            right: 5%;
+            animation-duration: 14s;
+        }
+
+        .shape:nth-child(10) {
+            width: 180px;
+            height: 180px;
+            top: 50%;
+            left: 70%;
+            animation-duration: 16s;
+        }
+
+        /* Floating animation for all shapes */
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) translateX(20px) rotate(45deg);
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background moving shapes -->
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+
+    <div class="container">
+        <h2>Login</h2>
+        <form method="POST" action="/">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="/signup">Sign up here</a></p>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li class="message {{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

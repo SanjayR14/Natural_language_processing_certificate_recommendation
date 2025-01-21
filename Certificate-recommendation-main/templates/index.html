@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Recommendation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('https://images.unsplash.com/photo-1514891702024-4db4175e8e56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fHRleHR1cmV8ZW58MHx8fHwxNjg5NjUwMTI0&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 10;
+        }
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .header-buttons .btn {
+            margin-left: 10px;
+            color: white;
+            background-color: #ff8c00;
+            border: none;
+        }
+        .header-buttons .btn:hover {
+            background-color: #ff0080;
+        }
+        h1 {
+            text-align: center;
+            color: #00ff99;
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8);
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .speech-btn, .stop-btn {
+            position: absolute;
+            top: 0;
+            border: none;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1.5em;
+            outline: none;
+        }
+        .speech-btn {
+            right: 45px;
+        }
+        .stop-btn {
+            right: 0;
+        }
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            border: none;
+            transition: background 0.3s, transform 0.3s;
+            font-weight: bold;
+            padding: 15px;
+            font-size: 1.2em;
+            border-radius: 25px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff8c00, #ff0080);
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 20px;
+            border: 1px solid #00ff99;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: background 0.3s;
+        }
+        .result:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .course-link {
+            color: #00ff99;
+        }
+        .course-link:hover {
+            text-decoration: underline;
+            color: #ffcc00;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: move 20s linear infinite;
+            filter: blur(3px);
+            pointer-events: none; /* Prevent clicks from being blocked by the shapes */
+        }
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-80px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .recording-indicator {
+            display: none;
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Add the audio element for background sound -->
+
+
+
+<!-- Button to toggle audio -->
+
+
+<div class="header-buttons">
+    <a href="/profile" class="btn btn-outline-light">Profile</a>
+    <a href="/logout" class="btn btn-outline-light" onclick="handleLogout()">Logout</a>
+</div>
+
+<div class="container mt-5">
+    <h1>Certificate Recommendation System</h1>
+    <h2>Get Tailored Certificate Suggestions</h2>
+    <form method="POST" class="mt-4">
+        <div class="form-group">
+            <label for="topic">Enter a Topic:</label>
+            <input type="text" class="form-control" id="topic" name="topic" required placeholder="e.g., Machine Learning">
+            <button type="button" class="speech-btn" onclick="startSpeechRecognition()">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button type="button" class="stop-btn" onclick="stopSpeechRecognition()">
+                <i class="fas fa-stop"></i>
+            </button>
+            <p class="recording-indicator" id="recording-indicator">Recording...</p>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Get Recommendations
+        </button>
+    </form>
+
+    <div class="result mt-4">
+        {{ syntax_result|safe }}
+    </div>
+    
+    <div class="result mt-2">
+        {{ recommendation_result|safe }}
+    </div>
+</div>
+
+<footer class="mt-4">
+    <p>&copy; 2024 Certificate Recommendation System | Designed by Your Name</p>
+</footer>
+
+<script>
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function createCircles(numCircles) {
+        const body = document.body;
+        for (let i = 0; i < numCircles; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('shape');
+            circle.style.backgroundColor = getRandomColor();
+            const size = Math.random() * 30 + 10;
+            circle.style.width = size + 'vw';
+            circle.style.height = size + 'vw';
+            circle.style.top = Math.random() * 100 + 'vh';
+            circle.style.left = Math.random() * 100 + 'vw';
+            body.appendChild(circle);
+        }
+    }
+
+    // Create 12 animated circles
+    createCircles(12);
+
+    let recognition;
+
+    function startSpeechRecognition() {
+        const recordingIndicator = document.getElementById('recording-indicator');
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.onstart = function() {
+                recordingIndicator.style.display = 'block';
+            };
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('topic').value = transcript;
+                recordingIndicator.style.display = 'none';
+            };
+            recognition.onerror = function() {
+                recordingIndicator.style.display = 'none';
+            };
+            recognition.start();
+        } else {
+            alert('Speech recognition not supported in this browser.');
+        }
+    }
+
+    function stopSpeechRecognition() {
+        if (recognition) {
+            recognition.stop();
+        }
+    }
+
+    function toggleAudio() {
+        const audio = document.getElementById('background-audio');
+        const toggleButton = document.getElementById('toggle-audio');
+        if (audio.muted) {
+            audio.muted = false;
+            toggleButton.textContent = 'Audio Off';
+        } else {
+            audio.muted = true;
+            toggleButton.textContent = 'Audio On';
+        }
+    }
+
+    function handleLogout() {
+        // Implement logout functionality
+        console.log('Logging out...');
+        // You can redirect to the logout route if needed
+        // window.location.href = '/logout';
+    }
+</script>
+</body>
+</html>
