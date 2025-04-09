@@ -25,7 +25,7 @@ queries_collection = db['queries']
 nlp = spacy.load('en_core_web_sm')
 
 # Load the courses data
-courses_df = pd.read_csv(r"C:\Users\Sanju\Downloads\alison.csv", encoding='ISO-8859-1')
+courses_df = pd.read_csv(r"alison.csv", encoding='ISO-8859-1')
 courses_df.columns = courses_df.columns.str.strip()  # Normalize column names
 
 # Initialize TF-IDF Vectorizer
